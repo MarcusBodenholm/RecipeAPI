@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
-namespace RecipeAPI.Repository.Entities
+namespace RecipeAPI.Models.Entities
 {
     public class User
     {
@@ -15,5 +17,11 @@ namespace RecipeAPI.Repository.Entities
         [Required]
         [StringLength(50)]
         public string Email { get; set; }
+        [AllowNull]
+        [JsonIgnore]
+        public virtual ICollection<Recipe> Recipes { get; set; }
+        [AllowNull]
+        [JsonIgnore]
+        public virtual ICollection<Rating> Ratings { get; set; }
     }
 }

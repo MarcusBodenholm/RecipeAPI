@@ -1,14 +1,14 @@
-﻿using RecipeAPI.Repository.Entities;
+﻿using RecipeAPI.Models.Entities;
 
 namespace RecipeAPI.Repository.Interfaces
 {
     public interface IRatingRepo
     {
         public void CreateRating(Rating rating);
-        public Rating? GetRating(int id);
+        public Rating? GetRating(int id, bool tracking);
         public List<Rating> GetAllRatings();
         public void DeleteRating(Rating toDelete);
         public void UpdateRating();
-
+        public List<Rating> GetRatingsForRecipe(Recipe recipe);
     }
 }

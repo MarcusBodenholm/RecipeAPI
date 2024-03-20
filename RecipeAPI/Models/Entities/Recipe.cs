@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
-namespace RecipeAPI.Repository.Entities
+namespace RecipeAPI.Models.Entities
 {
     public class Recipe
     {
@@ -10,12 +11,14 @@ namespace RecipeAPI.Repository.Entities
         [StringLength(50)]
         public string Title { get; set; }
         [Required]
-        [StringLength(100)]
+        [StringLength(500)]
         public string Description { get; set; }
+        [StringLength(500)]
+        public string Ingredients { get; set; }
         [Required]
         public virtual User CreatedBy { get; set; }
-
-        public virtual List<Rating> Ratings { get; set; }
+        public virtual Category Category { get; set; }
+        public virtual ICollection<Rating> Ratings { get; set; }
 
     }
 }

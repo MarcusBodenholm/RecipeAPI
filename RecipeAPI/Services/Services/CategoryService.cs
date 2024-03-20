@@ -1,9 +1,10 @@
-﻿using RecipeAPI.Repository.Entities;
+﻿using RecipeAPI.Models.Entities;
 using RecipeAPI.Repository.Interfaces;
+using RecipeAPI.Services.Interfaces;
 
 namespace RecipeAPI.Services.Services
 {
-    public class CategoryService
+    public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepo _categoryRepo;
 
@@ -17,7 +18,7 @@ namespace RecipeAPI.Services.Services
         }
         public Category? GetCategory(int id)
         {
-            Category? category = _categoryRepo.GetCategory(id);
+            Category? category = _categoryRepo.GetCategory(id, false);
             return category;
         }
         public List<Category> GetAllCategories()
@@ -27,7 +28,7 @@ namespace RecipeAPI.Services.Services
         }
         public void DeleteCategory(Category category)
         {
-            Category? toDelete = _categoryRepo.GetCategory(category.Id);
+            Category? toDelete = _categoryRepo.GetCategory(category.Id, true);
             if (toDelete != null)
             {
                 _categoryRepo.DeleteCategory(toDelete);
@@ -35,7 +36,7 @@ namespace RecipeAPI.Services.Services
         }
         public void UpdateCategory(Category category)
         {
-            Category toUpdate = _categoryRepo.GetCategory(category.Id);
+            Category? toUpdate = _categoryRepo.GetCategory(category.Id, true);
             if (toUpdate != null)
             {
                 toUpdate.CategoryName = category.CategoryName;

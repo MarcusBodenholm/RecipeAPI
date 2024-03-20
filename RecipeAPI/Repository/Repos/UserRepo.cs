@@ -1,5 +1,6 @@
-﻿using RecipeAPI.Repository.Context;
-using RecipeAPI.Repository.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using RecipeAPI.Models.Entities;
+using RecipeAPI.Repository.Context;
 using RecipeAPI.Repository.Interfaces;
 
 namespace RecipeAPI.Repository.Repos
@@ -16,9 +17,11 @@ namespace RecipeAPI.Repository.Repos
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
         }
-        public User? GetUser(int id)
+        public User? GetUser(int id, bool tracking)
         {
-            User user = _dbContext.Users.SingleOrDefault(u => u.Id == id);
+            User? user = tracking ?
+                _dbContext.Users.SingleOrDefault(u => u.Id == id) :
+                _dbContext.Users.AsNoTracking().SingleOrDefault(u => u.Id == id);
             return user;
         }
         public List<User> GetAllUsers()

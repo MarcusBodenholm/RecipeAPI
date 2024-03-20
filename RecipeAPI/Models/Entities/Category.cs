@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RecipeAPI.Repository.Entities
+namespace RecipeAPI.Models.Entities
 {
     public class Category
     {
-        [Key] 
+        [Key]
         public int Id { get; set; }
         [Required]
         [StringLength(50)]
