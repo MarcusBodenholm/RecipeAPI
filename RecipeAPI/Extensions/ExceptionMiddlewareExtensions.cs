@@ -13,7 +13,6 @@ namespace RecipeAPI.Extensions
             {
                 appError.Run(async context =>
                 {
-                    //context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     context.Response.ContentType = "application/json";
                     var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
                     if (contextFeature != null)
@@ -21,6 +20,7 @@ namespace RecipeAPI.Extensions
                         context.Response.StatusCode = contextFeature.Error switch
                         {
                             NotFoundException => StatusCodes.Status404NotFound,
+                            UnauthorizedException => StatusCodes.Status401Unauthorized,
                             _ => StatusCodes.Status500InternalServerError
                         };
                         await context.Response.WriteAsync(new ErrorDetails()

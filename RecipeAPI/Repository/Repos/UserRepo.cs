@@ -38,5 +38,13 @@ namespace RecipeAPI.Repository.Repos
         {
             _dbContext.SaveChanges();
         }
+
+        public User? GetUserByUsername(string username, bool tracking)
+        {
+            User? user = tracking ?
+                _dbContext.Users.SingleOrDefault(u => u.Username == username) :
+                _dbContext.Users.AsNoTracking().SingleOrDefault(u => u.Username == username);
+            return user;
+        }
     }
 }

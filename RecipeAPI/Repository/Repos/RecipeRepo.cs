@@ -20,13 +20,37 @@ namespace RecipeAPI.Repository.Repos
         public Recipe? GetRecipe(int id, bool tracking)
         {
             Recipe? recipe = tracking ?
-                _dbContext.Recipes.SingleOrDefault(r => r.Id == id) :
-                _dbContext.Recipes.AsNoTracking().SingleOrDefault(r => r.Id == id);
+                _dbContext.Recipes
+                    .Include(r => r.Ratings)
+                    .Include(r => r.CreatedBy)
+                    .Include(r => r.Category)
+                    .SingleOrDefault(r => r.Id == id) :
+                _dbContext.Recipes
+                    .Include(r => r.Ratings)
+                    .Include(r => r.CreatedBy)
+                    .Include(r => r.Category)
+                    .AsNoTracking()
+                    .SingleOrDefault(r => r.Id == id);
             return recipe;
         }
         public List<Recipe> GetAllRecipes()
         {
-            List<Recipe> recipes = _dbContext.Recipes.AsNoTracking().ToList();
+            List<Recipe> recipes = _dbContext.Recipes.Include(r => r.Ratings)
+                                            .Include(r => r.CreatedBy)
+                                            .Include(r => r.Category)
+                                            .AsNoTracking()
+                                            .ToList();
+            return recipes;
+        }
+        public List<Recipe> GetAllRecipesForUser(int userId)
+        {
+            List<Recipe> recipes = _dbContext.Recipes
+                                        .Include(r => r.Ratings)
+                                        .Include(r => r.CreatedBy)
+                                        .Include(r => r.Category)
+                                        .AsNoTracking()
+                                        .Where(r => r.CreatedBy.Id == userId)
+                                        .ToList();
             return recipes;
         }
         public void DeleteRecipe(Recipe toDelete)

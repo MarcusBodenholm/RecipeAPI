@@ -20,7 +20,7 @@ namespace RecipeAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult GetUser(int id)
         {
-            User? user = _userService.GetUser(id);
+            var user = _userService.GetUser(id);
             return Ok(user);
         }
         [HttpGet]
@@ -58,11 +58,28 @@ namespace RecipeAPI.Controllers
             _userService.UpdateUser(user);
             return NoContent();
         }
-        [HttpDelete("{id}")]
-        public IActionResult DeleteUser(int id)
+        [HttpDelete]
+        public IActionResult DeleteUser(UserDeleteDTO user)
         {
-            _userService.DeleteUser(id);
+            if (user == null) return BadRequest("Invalid data.");
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(user);
+            }
+            _userService.DeleteUser(user);
             return NoContent();
+        }
+        [HttpGet]
+        [Route("/api/login")]
+        public IActionResult Login(UserLoginDTO user)
+        {
+            if (user == null) return BadRequest("Invalid data.");
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(user);
+            }
+            int id = _userService.Login(user);
+            return Ok($"You are now logged in with id {id}");
         }
     }
 }

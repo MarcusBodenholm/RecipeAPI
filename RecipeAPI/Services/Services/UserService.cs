@@ -19,34 +19,35 @@ namespace RecipeAPI.Services.Services
 
         public void CreateUser(UserCreateDTO user)
         {
-            if (user == null || user.Username.Length == 0
-                || user.Password.Length == 0 || user.Email.Length == 0)
-            {
-                throw new Exception("Exception");
-            }
             User newUser = _mapper.Map<User>(user);
             _userRepo.CreateUser(newUser);
         }
-        public User? GetUser(int id)
+        public UserDTO? GetUser(int id)
         {
             User? user = _userRepo.GetUser(id, false);
             if (user == null)
             {
                 throw new UserNotFoundException(id);
             }
-            return user;
+            var output = _mapper.Map<UserDTO>(user);
+            return output;
         }
-        public List<User> GetAllUsers()
+        public List<UserDTO> GetAllUsers()
         {
-            var result = _userRepo.GetAllUsers();
-            return result;
+            var users = _userRepo.GetAllUsers();
+            var outcome = users.Select(u => _mapper.Map<UserDTO>(u)).ToList();
+            return outcome;
         }
-        public void DeleteUser(int id)
+        public void DeleteUser(UserDeleteDTO user)
         {
-            User? toDelete = _userRepo.GetUser(id, true);
+            User? toDelete = _userRepo.GetUser(user.Id, true);
             if (toDelete == null)
             {
-                throw new UserNotFoundException(id);
+                throw new UserNotFoundException(user.Id);
+            }
+            if (toDelete.Password != user.Password)
+            {
+                throw new UserNotAuthorizedException("Not authorized to delete user as password was incorrect.");
             }
             _userRepo.DeleteUser(toDelete);
         }
@@ -57,11 +58,20 @@ namespace RecipeAPI.Services.Services
             {
                 throw new UserNotFoundException(user.Id);
             }
-
             toUpdate.Email = user.Email;
             toUpdate.Password = user.Password;
             toUpdate.Username = user.Username;
             _userRepo.UpdateUser();
+        }
+
+        public int Login(UserLoginDTO user)
+        {
+            User? userFromDB = _userRepo.GetUserByUsername(user.Username, false);
+            if (user.Password != userFromDB.Password || userFromDB == null)
+            {
+                throw new UserNotAuthorizedException("Either the username or the password was incorrect.");
+            }
+            return userFromDB.Id;
         }
     }
 }

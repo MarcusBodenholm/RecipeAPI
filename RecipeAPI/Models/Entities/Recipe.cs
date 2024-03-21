@@ -19,6 +19,9 @@ namespace RecipeAPI.Models.Entities
         public virtual User CreatedBy { get; set; }
         public virtual Category Category { get; set; }
         public virtual ICollection<Rating> Ratings { get; set; }
-
+        public Double? AverageRating()
+        {
+            return Ratings.Count == 0 ? 0 : Ratings.AsEnumerable().Average(r => r.Value);
+        }
     }
 }

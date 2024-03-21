@@ -1,13 +1,15 @@
-﻿using RecipeAPI.Models.Entities;
+﻿using RecipeAPI.Models.DTO;
+using RecipeAPI.Models.Entities;
 
 namespace RecipeAPI.Services.Interfaces
 {
     public interface IRecipeService
     {
-        public void CreateRecipe(Recipe recipe);
-        public Recipe? GetRecipe(int id);
-        public List<Recipe> GetAllRecipes();
-        public void DeleteRecipe(Recipe recipe);
-        public void UpdateRecipe(Recipe recipe);
+        public void CreateRecipe(RecipeCreateDTO recipe);
+        public RecipeDTO? GetRecipe(int id);
+        public List<RecipeDTO> GetAllRecipes();
+        public List<RecipeDTO> GetAllRecipesForUser(int userId);
+        public void DeleteRecipe(int id);
+        public void UpdateRecipe(RecipeUpdateDTO recipe);
     }
 }

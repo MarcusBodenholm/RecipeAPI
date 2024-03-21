@@ -6,9 +6,10 @@ namespace RecipeAPI.Services.Interfaces
     public interface IUserService
     {
         public void CreateUser(UserCreateDTO user);
-        public User? GetUser(int id);
-        public List<User> GetAllUsers();
-        public void DeleteUser(int id);
+        public UserDTO? GetUser(int id);
+        public List<UserDTO> GetAllUsers();
+        public void DeleteUser(UserDeleteDTO user);
         public void UpdateUser(UserUpdateDTO user);
+        public int Login(UserLoginDTO user);
     }
 }

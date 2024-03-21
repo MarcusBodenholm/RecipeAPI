@@ -15,6 +15,11 @@ namespace RecipeAPI.Models.Profiles
                 option => option.MapFrom(src => src.Email))
                 .ForMember(destination => destination.Password,
                 option => option.MapFrom(src => src.Password));
+            CreateMap<User, UserDTO>()
+                .ForMember(destination => destination.Username,
+                option => option.MapFrom(src => src.Username))
+                .ForMember(destination => destination.Email,
+                option => option.MapFrom(src => src.Email));
         }
     }
 }
