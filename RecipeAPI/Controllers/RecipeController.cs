@@ -40,22 +40,22 @@ namespace RecipeAPI.Controllers
         {
             if (recipe == null) return BadRequest("Invalid data.");
             _recipeService.CreateRecipe(recipe);
-            return Created();
+            return Ok("Recipe created.");
         }
         [HttpPut()]
         public IActionResult UpdateRecipe(RecipeUpdateDTO recipe)
         {
             if (recipe == null) return BadRequest("Invalid data.");
             _recipeService.UpdateRecipe(recipe);
-            return NoContent();
+            return Ok("Recipe updated.");
 
         }
-        [HttpDelete("{id}")]
-        public IActionResult DeleteRecipe(int id)
+        [HttpDelete]
+        public IActionResult DeleteRecipe(RecipeDeleteDTO recipe)
         {
-            if (id == null) return BadRequest("Invalid data.");
-            _recipeService.DeleteRecipe(id);
-            return NoContent();
+            if (recipe == null) return BadRequest("Invalid data.");
+            _recipeService.DeleteRecipe(recipe);
+            return Ok("Recipe deleted.");
 
         }
     }

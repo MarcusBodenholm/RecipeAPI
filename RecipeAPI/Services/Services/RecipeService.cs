@@ -41,6 +41,10 @@ namespace RecipeAPI.Services.Services
         public RecipeDTO? GetRecipe(int id)
         {
             Recipe? recipe = _recipeRepo.GetRecipe(id, false);
+            if (recipe == null)
+            {
+                throw new RecipeNotFoundException(id);
+            }
             var output = _mapper.Map<RecipeDTO>(recipe);
             return output;
         }
@@ -56,14 +60,18 @@ namespace RecipeAPI.Services.Services
             var result = recipes.Select(r => _mapper.Map<RecipeDTO>(r)).ToList();
             return result;
         }
-        public void DeleteRecipe(int id)
+        public void DeleteRecipe(RecipeDeleteDTO recipe)
         {
             //Need to add logic to check if the
             //deleting user was the one who created the recipe. 
-            Recipe? toDelete = _recipeRepo.GetRecipe(id, true);
+            Recipe? toDelete = _recipeRepo.GetRecipe(recipe.RecipeID, true);
             if (toDelete == null)
             {
-                throw new RecipeNotFoundException(id);
+                throw new RecipeNotFoundException(recipe.RecipeID);
+            }
+            if (recipe.UserID != toDelete.CreatedBy.Id)
+            {
+                throw new UserNotAuthorizedException("You're not authorized to delete recipes you did not create.");
             }
             _recipeRepo.DeleteRecipe(toDelete);
         }

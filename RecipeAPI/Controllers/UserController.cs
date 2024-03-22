@@ -41,7 +41,7 @@ namespace RecipeAPI.Controllers
                 return UnprocessableEntity(user);
             }
             _userService.CreateUser(user);
-            return NoContent();
+            return Ok("User created.");
         }
         [HttpPut]
         public IActionResult UpdateUser(UserUpdateDTO user)
@@ -56,7 +56,7 @@ namespace RecipeAPI.Controllers
             }
 
             _userService.UpdateUser(user);
-            return NoContent();
+            return Ok("User updated.");
         }
         [HttpDelete]
         public IActionResult DeleteUser(UserDeleteDTO user)
@@ -67,9 +67,9 @@ namespace RecipeAPI.Controllers
                 return UnprocessableEntity(user);
             }
             _userService.DeleteUser(user);
-            return NoContent();
+            return Ok("User deleted.");
         }
-        [HttpGet]
+        [HttpPost]
         [Route("/api/login")]
         public IActionResult Login(UserLoginDTO user)
         {

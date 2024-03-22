@@ -20,14 +20,23 @@ namespace RecipeAPI.Repository.Repos
         public Rating? GetRating(int id, bool tracking)
         {
             Rating? rating = tracking ?
-                             _dbContext.Ratings.SingleOrDefault(r => r.Id == id)
+                             _dbContext.Ratings
+                                .Include(r => r.User)
+                                .Include(r => r.Recipe)
+                                .SingleOrDefault(r => r.Id == id)
                              : 
-                             _dbContext.Ratings.AsNoTracking().SingleOrDefault(r => r.Id == id);
+                             _dbContext.Ratings
+                                .Include(r => r.User)
+                                .Include(r => r.Recipe)
+                                .AsNoTracking().SingleOrDefault(r => r.Id == id);
             return rating;
         }
         public List<Rating> GetAllRatings()
         {
-            List<Rating> ratings = _dbContext.Ratings.AsNoTracking().ToList();
+            List<Rating> ratings = _dbContext.Ratings.Include(r => r.User)
+                .Include(r => r.Recipe)
+                .AsNoTracking()
+                .ToList();
             return ratings;
         }
         public void DeleteRating(Rating toDelete)
@@ -42,9 +51,11 @@ namespace RecipeAPI.Repository.Repos
         public List<Rating> GetRatingsForRecipe(Recipe recipe)
         {
             var result = _dbContext.Ratings
-                        .AsNoTracking()
-                        .Where(r => r.Recipe.Id == recipe.Id)
-                        .ToList();
+                .Include(r => r.User)
+                .Include(r => r.Recipe)
+                .AsNoTracking()
+                .Where(r => r.Recipe.Id == recipe.Id)
+                .ToList();
             return result;
         }
     }

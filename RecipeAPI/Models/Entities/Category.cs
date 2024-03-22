@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace RecipeAPI.Models.Entities
 {
@@ -9,5 +10,7 @@ namespace RecipeAPI.Models.Entities
         [Required]
         [StringLength(50)]
         public string CategoryName { get; set; }
+        [JsonIgnore]
+        public virtual List<Recipe> Recipes { get; set; }
     }
 }

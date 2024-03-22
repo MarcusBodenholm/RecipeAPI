@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RecipeAPI.Models.DTO;
+using RecipeAPI.Services.Interfaces;
 
 namespace RecipeAPI.Controllers
 {
@@ -7,5 +9,49 @@ namespace RecipeAPI.Controllers
     [ApiController]
     public class RatingController : ControllerBase
     {
+        private readonly IRatingService _ratingService;
+
+        public RatingController(IRatingService ratingService)
+        {
+            _ratingService = ratingService;
+        }
+        [HttpGet("{id}")]
+        public IActionResult GetRating(int id)
+        {
+            return Ok();
+        }
+        [HttpPost]
+        public IActionResult CreateRating(RatingCreateDTO rating)
+        {
+            if (rating == null) return BadRequest();
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(rating);
+            }
+            _ratingService.CreateRating(rating);
+            return Ok("Rating created.");
+        }
+        [HttpPut]
+        public IActionResult UpdateRating(RatingUpdateDTO rating)
+        {
+            if (rating == null) return BadRequest();
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(rating);
+            }
+            _ratingService.UpdateRating(rating);
+            return Ok("Rating updated.");
+        }
+        [HttpDelete]
+        public IActionResult DeleteRating(RatingDeleteDTO rating)
+        {
+            if (rating == null) return BadRequest();
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(rating);
+            }
+            _ratingService.DeleteRating(rating);
+            return Ok("Rating deleted");
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace RecipeAPI.Services.Interfaces
         public RecipeDTO? GetRecipe(int id);
         public List<RecipeDTO> GetAllRecipes();
         public List<RecipeDTO> GetAllRecipesForUser(int userId);
-        public void DeleteRecipe(int id);
+        public void DeleteRecipe(RecipeDeleteDTO recipe);
         public void UpdateRecipe(RecipeUpdateDTO recipe);
     }
 }

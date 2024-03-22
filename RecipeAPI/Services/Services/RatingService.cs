@@ -1,4 +1,7 @@
-﻿using RecipeAPI.Models.Entities;
+﻿using AutoMapper;
+using RecipeAPI.Models.DTO;
+using RecipeAPI.Models.Entities;
+using RecipeAPI.Models.Exceptions;
 using RecipeAPI.Repository.Interfaces;
 using RecipeAPI.Services.Interfaces;
 
@@ -7,50 +10,81 @@ namespace RecipeAPI.Services.Services
     public class RatingService : IRatingService
     {
         private readonly IRatingRepo _ratingRepo;
+        private readonly IMapper _mapper;
+        private readonly IRecipeRepo _recipeRepo;
+        private readonly IUserRepo _userRepo;
 
-        public RatingService(IRatingRepo ratingRepo)
+        public RatingService(IRatingRepo ratingRepo, IMapper mapper, IRecipeRepo recipeRepo, IUserRepo userRepo)
         {
             _ratingRepo = ratingRepo;
+            _mapper = mapper;
+            _recipeRepo = recipeRepo;
+            _userRepo = userRepo;
         }
-        public void CreateRating(Rating rating)
+        public void CreateRating(RatingCreateDTO rating)
         {
-            //Need to add logic to check if the
-            //rating user didn't create the recipe. 
-            _ratingRepo.CreateRating(rating);
+            Recipe? recipe = _recipeRepo.GetRecipe(rating.RecipeID, true);
+            if (recipe == null)
+            {
+                throw new RecipeNotFoundException(rating.RecipeID);
+            }
+            if (recipe.CreatedBy.Id == rating.CreatedByID)
+            {
+                throw new UserNotAuthorizedException("You cannot create a rating for your own recipe.");
+            }
+            User? user = _userRepo.GetUser(rating.CreatedByID, true);
+            if (user == null)
+            {
+                throw new UserNotFoundException(rating.CreatedByID);
+            }
+            Rating newRating = _mapper.Map<Rating>(rating);
+            newRating.User = user;
+            newRating.Recipe = recipe;
+            _ratingRepo.CreateRating(newRating);
         }
-        public Rating? GetRating(int id)
+        public RatingDTO GetRating(int id)
         {
             Rating? rating = _ratingRepo.GetRating(id, false);
-            return rating;
-        }
-        public List<Rating> GetAllRatings()
-        {
-            var result = _ratingRepo.GetAllRatings();
+            if (rating == null)
+            {
+                throw new RatingNotFoundException(id);
+            }
+            var result = _mapper.Map<RatingDTO>(rating);
             return result;
         }
-        public void DeleteRating(Rating rating)
+        public List<RatingDTO> GetAllRatings()
         {
-            //Need to add logic to check if the
-            //deleting user was the one who created the rating. 
-            Rating? toDelete = _ratingRepo.GetRating(rating.Id, true);
-            if (toDelete != null)
-            {
-                _ratingRepo.DeleteRating(toDelete);
-            }
+            var ratings = _ratingRepo.GetAllRatings();
+            var result = ratings.Select(r => _mapper.Map<RatingDTO>(r)).ToList();
+            return result;
         }
-        public void UpdateRating(Rating rating)
+        public void DeleteRating(RatingDeleteDTO rating)
         {
-            //Need to add logic to check if the
-            //updating user was the one who created the rating. 
-
-            Rating? toUpdate = _ratingRepo.GetRating(rating.Id, true);
-            if (toUpdate != null)
+            Rating? toDelete = _ratingRepo.GetRating(rating.RatingID, true);
+            if (toDelete == null)
             {
-                toUpdate.Recipe = rating.Recipe;
-                toUpdate.Value = rating.Value;
-                toUpdate.User = rating.User;
-                _ratingRepo.UpdateRating();
+                throw new RatingNotFoundException(rating.RatingID);
             }
+            if (toDelete.User.Id != rating.UserID)
+            {
+                throw new UserNotAuthorizedException("Only the creator of the rating can remove it.");
+            }
+            _ratingRepo.DeleteRating(toDelete);
+        }
+        public void UpdateRating(RatingUpdateDTO rating)
+        {
+            Rating? toUpdate = _ratingRepo.GetRating(rating.RatingID, true);
+            if (toUpdate == null)
+            {
+                throw new RatingNotFoundException(rating.RatingID);
+            }
+            if (toUpdate.User.Id != rating.CreatedByID)
+            {
+                throw new UserNotAuthorizedException("Only the creator of the rating can update it.");
+            }
+
+            toUpdate.Value = rating.Value;
+            _ratingRepo.UpdateRating();
         }
         public double AverageRating(Recipe recipe)
         {

@@ -67,7 +67,7 @@ namespace RecipeAPI.Services.Services
         public int Login(UserLoginDTO user)
         {
             User? userFromDB = _userRepo.GetUserByUsername(user.Username, false);
-            if (user.Password != userFromDB.Password || userFromDB == null)
+            if (userFromDB == null || user.Password != userFromDB.Password)
             {
                 throw new UserNotAuthorizedException("Either the username or the password was incorrect.");
             }
