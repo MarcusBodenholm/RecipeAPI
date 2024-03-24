@@ -21,7 +21,7 @@ namespace RecipeAPI.Models.Entities
         public virtual ICollection<Rating> Ratings { get; set; }
         public Double? AverageRating()
         {
-            return Ratings.Count == 0 ? 0 : Ratings.AsEnumerable().Average(r => r.Value);
+            return Ratings.Count == 0 ? 0 : Math.Round(Ratings.AsEnumerable().Average(r => r.Value), 2);
         }
     }
 }

@@ -5,6 +5,9 @@ namespace RecipeAPI.Models.DTO
 {
     public class RecipeDTO
     {
+        [Required(ErrorMessage = "RecipeID is a required field.")]
+        public int RecipeID { get; set; }
+
         [Required(ErrorMessage = "Title is a required field.")]
         [MaxLength(50, ErrorMessage = "Maximum length for the title is 50 characters.")]
         public string Title { get; set; }

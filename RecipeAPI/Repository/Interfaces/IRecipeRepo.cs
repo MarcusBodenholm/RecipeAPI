@@ -10,5 +10,6 @@ namespace RecipeAPI.Repository.Interfaces
         public List<Recipe> GetAllRecipesForUser(int userId);
         public void DeleteRecipe(Recipe toDelete);
         public void UpdateRecipe();
+        public List<Recipe> SearchRecipes(string search);
     }
 }

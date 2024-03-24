@@ -103,5 +103,11 @@ namespace RecipeAPI.Services.Services
                 _recipeRepo.UpdateRecipe();
             }
         }
+        public List<RecipeDTO> SearchRecipes(string search)
+        {
+            var recipes = _recipeRepo.SearchRecipes(search);
+            var result = recipes.Select(r => _mapper.Map<RecipeDTO>(r)).ToList();
+            return result;
+        }
     }
 }

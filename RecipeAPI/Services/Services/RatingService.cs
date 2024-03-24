@@ -52,6 +52,12 @@ namespace RecipeAPI.Services.Services
             var result = _mapper.Map<RatingDTO>(rating);
             return result;
         }
+        public List<RatingDTO> GetRatingsForRecipe(int recipeid)
+        {
+            var ratings = _ratingRepo.GetRatingsForRecipe(recipeid);
+            var result = ratings.Select(r => _mapper.Map<RatingDTO>(r)).ToList();
+            return result;
+        }
         public List<RatingDTO> GetAllRatings()
         {
             var ratings = _ratingRepo.GetAllRatings();

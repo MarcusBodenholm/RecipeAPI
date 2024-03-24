@@ -11,5 +11,6 @@ namespace RecipeAPI.Services.Interfaces
         public List<RecipeDTO> GetAllRecipesForUser(int userId);
         public void DeleteRecipe(RecipeDeleteDTO recipe);
         public void UpdateRecipe(RecipeUpdateDTO recipe);
+        public List<RecipeDTO> SearchRecipes(string search);
     }
 }

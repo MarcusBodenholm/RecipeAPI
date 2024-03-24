@@ -19,6 +19,11 @@ namespace RecipeAPI.Services.Services
 
         public void CreateUser(UserCreateDTO user)
         {
+            User? exists = _userRepo.GetUserByUsername(user.Username, false);
+            if (exists != null)
+            {
+                throw new UserNotAuthorizedException("A user by that username already exists.");
+            }
             User newUser = _mapper.Map<User>(user);
             _userRepo.CreateUser(newUser);
         }
@@ -53,6 +58,11 @@ namespace RecipeAPI.Services.Services
         }
         public void UpdateUser(UserUpdateDTO user)
         {
+            User? userNameInUse = _userRepo.GetUserByUsername(user.Username, false);
+            if (userNameInUse != null)
+            {
+                throw new UserNotAuthorizedException("That username is already in use.");
+            }
             User? toUpdate = _userRepo.GetUser(user.Id, true);
             if (toUpdate == null)
             {

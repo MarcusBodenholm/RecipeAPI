@@ -31,6 +31,16 @@ namespace RecipeAPI.Repository.Repos
                                 .AsNoTracking().SingleOrDefault(r => r.Id == id);
             return rating;
         }
+        public List<Rating> GetRatingsForRecipe(int recipeid)
+        {
+            List<Rating> ratings = _dbContext.Ratings
+                .Include(r => r.User)
+                .Include(r => r.Recipe)
+                .AsNoTracking()
+                .Where(r => r.Recipe.Id == recipeid)
+                .ToList();
+            return ratings;
+        }
         public List<Rating> GetAllRatings()
         {
             List<Rating> ratings = _dbContext.Ratings.Include(r => r.User)

@@ -56,7 +56,14 @@ namespace RecipeAPI.Controllers
             if (recipe == null) return BadRequest("Invalid data.");
             _recipeService.DeleteRecipe(recipe);
             return Ok("Recipe deleted.");
-
+        }
+        [HttpGet]
+        [Route("/api/[controller]/search")]
+        public IActionResult SearchRecipes(string search)
+        {
+            if (search == null || search.Length == 0) return BadRequest("Invalid data.");
+            var result = _recipeService.SearchRecipes(search);
+            return Ok(result);
         }
     }
 }

@@ -62,5 +62,17 @@ namespace RecipeAPI.Repository.Repos
         {
             _dbContext.SaveChanges();
         }
+        public List<Recipe> SearchRecipes(string search)
+        {
+            List<Recipe> recipes = _dbContext.Recipes
+                                    .Include(r => r.Ratings)
+                                    .Include(r => r.CreatedBy)
+                                    .Include(r => r.Category)
+                                    .AsNoTracking()
+                                    .Where(r => r.Title.ToLower().Contains(search.ToLower())
+                                    || r.Description.ToLower().Contains(search.ToLower())) 
+                                    .ToList();
+            return recipes;
+        }
     }
 }

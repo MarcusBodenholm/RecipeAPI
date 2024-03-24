@@ -1,4 +1,5 @@
-﻿using RecipeAPI.Models.Entities;
+﻿using RecipeAPI.Models.DTO;
+using RecipeAPI.Models.Entities;
 
 namespace RecipeAPI.Repository.Interfaces
 {
@@ -6,6 +7,7 @@ namespace RecipeAPI.Repository.Interfaces
     {
         public void CreateRating(Rating rating);
         public Rating? GetRating(int id, bool tracking);
+        public List<Rating> GetRatingsForRecipe(int recipeid);
         public List<Rating> GetAllRatings();
         public void DeleteRating(Rating toDelete);
         public void UpdateRating();

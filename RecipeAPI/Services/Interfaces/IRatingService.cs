@@ -7,6 +7,7 @@ namespace RecipeAPI.Services.Interfaces
     {
         public void CreateRating(RatingCreateDTO rating);
         public RatingDTO GetRating(int id);
+        public List<RatingDTO> GetRatingsForRecipe(int recipeid);
         public List<RatingDTO> GetAllRatings();
         public void DeleteRating(RatingDeleteDTO rating);
         public void UpdateRating(RatingUpdateDTO rating);

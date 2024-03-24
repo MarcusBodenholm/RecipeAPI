@@ -9,6 +9,8 @@ namespace RecipeAPI.Models.Profiles
         public RecipeProfile()
         {
             CreateMap<Recipe, RecipeDTO>()
+                .ForMember(destination => destination.RecipeID,
+                option => option.MapFrom(recipe => recipe.Id))
                 .ForMember(destination => destination.Title,
                 option => option.MapFrom(recipe => recipe.Title))
                 .ForMember(destination => destination.Description,

@@ -18,7 +18,15 @@ namespace RecipeAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult GetRating(int id)
         {
-            return Ok();
+            var result = _ratingService.GetRating(id);
+            return Ok(result);
+        }
+        [HttpGet]
+        [Route("/api/[controller]/{recipeid}/ratings")]
+        public IActionResult GetRatingsForRecipe(int recipeid)
+        {
+            var result = _ratingService.GetRatingsForRecipe(recipeid);
+            return Ok(result);
         }
         [HttpPost]
         public IActionResult CreateRating(RatingCreateDTO rating)
