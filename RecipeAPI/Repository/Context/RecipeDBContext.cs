@@ -23,7 +23,7 @@ namespace RecipeAPI.Repository.Context
             modelBuilder.Entity<Rating>()
                 .HasOne(r => r.User)
                 .WithMany(u => u.Ratings)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Rating>()
                 .HasOne(r => r.Recipe)
                 .WithMany(r => r.Ratings);

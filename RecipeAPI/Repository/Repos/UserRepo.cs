@@ -31,6 +31,8 @@ namespace RecipeAPI.Repository.Repos
         }
         public void DeleteUser(User toDelete)
         {
+            List<Rating> ratingsByUser = _dbContext.Ratings.Where(r => r.User.Id == toDelete.Id).ToList();
+            ratingsByUser.ForEach(r => _dbContext.Ratings.Remove(r));
             _dbContext.Users.Remove(toDelete);
             _dbContext.SaveChanges();
         }
